@@ -1,0 +1,13 @@
+
+
+*.swo
+*.swp
+
+*.exe
+*.o
+*.txt
+*.log
+
+*.dll
+
+
