@@ -1,0 +1,13 @@
+AL:=$(addprefix allegro_, $(addsuffix -5, main image audio font ttf primitives acodec)) allegro-5
+CXXFLAGS:=$(shell pkg-config --cflags $(AL)) -O0 -g
+LDLIBS=$(shell pkg-config --libs $(AL))
+LFLAGS=
+
+all: bin/bearys_bash
+
+bin/bearys_bash: main.cpp
+	$(LINK.cc) $< -o $@ $(LDLIBS)
+
+
+
+
