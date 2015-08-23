@@ -14014,7 +14014,7 @@ void game_loop()
        check_user_input();
 
        update_buffer();
-		al_flip_display();
+
    }
 
 	al_destroy_timer(timer);
