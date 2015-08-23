@@ -10,4 +10,5 @@
 
 *.dll
 
-
+bin/bearys_bash
+bin/bearys_bash.dSYM
