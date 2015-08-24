@@ -1,0 +1,6 @@
+ALLEGRO_MODULES = allegro-5 allegro_acodec-5 allegro_audio-5 allegro_font-5 allegro_image-5 allegro_primitives-5 allegro_ttf-5
+CXXFLAGS = -Wall $$(pkg-config --cflags $(ALLEGRO_MODULES))
+LIBS = $$(pkg-config --libs $(ALLEGRO_MODULES))
+
+all: main.cpp
+	g++ -o bin/bearys_bash $(CXXFLAGS) main.cpp $(LIBS)
