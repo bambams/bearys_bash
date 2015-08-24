@@ -939,7 +939,9 @@ string make_absolute(string filename)
 
 const char *full_filename(const char *address)
 {
-	return make_absolute(address).c_str();
+  static std::string buffer;
+  buffer = make_absolute(address);
+  return buffer.c_str();
     //return replace_filename(buf, arg_string, address, sizeof(buf));
 }
 
@@ -1867,6 +1869,7 @@ int add_splat_sound_to_list(std::string address)
     }    
     
     splat.push_back(gimp_splat_sound_struct);
+    return 0;
 }
 
 
@@ -1962,7 +1965,7 @@ float point_on_a_line_y(int top_x, int top_y, int bottom_x, int bottom_y, float 
 ////////////////////
 
 //char *level_to_start = "Old_Level_3.lev";
-#define DEFAULT_BACKGROUND "hill_3.bmp"
+#define DEFAULT_BACKGROUND "hill_3.gif"
 
 string title_screen_level = "title_screen_level.lv2";
 string level_to_start = title_screen_level;//"levels and maps/Old Level 3.lv2";
@@ -2298,7 +2301,8 @@ int add_level_to_list(const char *filename)
             allegro_message("cannot add level to list: %s", filename);
         }
         else level_list.push_back(llic);
-    }    
+    }
+    return 0;
 }
 
 
@@ -2713,10 +2717,12 @@ public: // this it's high security bank software!!
     int move_right(void) {
         moving_direction = MOVING_RIGHT;
         facing_right = true;
+	return 0;
         }
     int move_left(void) {
         moving_direction = MOVING_LEFT;
         facing_right = false;
+	return 0;
         }
     void move_nowhere(void) {
         moving_direction = MOVING_STILL;
@@ -3685,6 +3691,7 @@ public:
         {
             on_switch_stick = -1;
         }
+	return good_to_go;
     }
 
 
@@ -4289,10 +4296,10 @@ public:
         //const char *looking_for_this_string = gimme_a_char("[map %d]", map_num_to_load);
 
         int str_length = 7; // 7 if it's a single digit map num         
-        if (map_num_to_load > 9999) str_length == 11;
-        if (map_num_to_load > 999) str_length == 10;
-        if (map_num_to_load > 99) str_length == 9;
-        else if (map_num_to_load > 9) str_length == 8;
+        if (map_num_to_load > 9999) str_length = 11;
+        if (map_num_to_load > 999) str_length = 10;
+        if (map_num_to_load > 99) str_length = 9;
+        else if (map_num_to_load > 9) str_length = 8;
 
 
         // find the beginning of the map in the .lv2 file
@@ -4538,7 +4545,7 @@ public:
                          int this_index_number_has_been_used = false;
 
 
-                         if ((the_integer_conversion_of_substring > 0) && (the_integer_conversion_of_substring < MAX_INT_SIZE));
+                         if ((the_integer_conversion_of_substring > 0) && (the_integer_conversion_of_substring < MAX_INT_SIZE))
                          {
                               // test to make sure the index number has not been used
                               for (i=0; i<tile_index.size(); i++)
@@ -4697,7 +4704,7 @@ public:
 
         return 0;
     }
-    int save(char *filename)
+    int save(const char *filename)
     {
         ofstream outfile(full_filename(filename));
 
@@ -4905,6 +4912,7 @@ int fill_with_boundry(int xx, int yy, int xx2, int yy2, int boundry_tile)
             current_map.tile[h][k].boundry = boundry_tile;
         }
     }
+    return 0;
 }
 
 
@@ -6132,6 +6140,7 @@ bool is_switch_active(int block_number)
     {
         if (current_level.switch_stick[i].index_num == block_number) return current_level.switch_stick[i].active;
     }
+    return false;
 }
 
 
@@ -6189,12 +6198,12 @@ public:
 
     // ---
 
-    float top(float f) { y = f; }
-    float left(float f) { x = f; }
-    float bottom(float f) { y = f-SCREEN_H; }
-    float right(float f) { x = f-SCREEN_W; }
-    float center(float f) { x = f-SCREEN_W/2; }
-    float middle(float f) { y = f-SCREEN_H/2; }
+    float top(float f) { return y = f; }
+    float left(float f) { return x = f; }
+    float bottom(float f) { return y = f-SCREEN_H; }
+    float right(float f) { return x = f-SCREEN_W; }
+    float center(float f) { return x = f-SCREEN_W/2; }
+    float middle(float f) { return y = f-SCREEN_H/2; }
 
     float top() { return y; }
     float left() { return x; }
@@ -6311,7 +6320,7 @@ public:
         if (num1 == num2) { return NO_CHANGE; } // no change
         else if ((num1 == -1) && (num2 != -1)) { return RESTRAINED; } // the camera is being restrained
         else if ((num1 != -1) && (num2 == -1)) { return FREED; } // the camera is being freed
-        else if ((num1 != num2)) { return RE_RESTRAINED; } // the camera is being re-restrained
+        else { return RE_RESTRAINED; } // the camera is being re-restrained
     }
 
 
@@ -7973,6 +7982,7 @@ bool check_switch_behind_player()
      {
          player_on_switch_block = false;
      }
+     return good_to_go;
 }
 
 
@@ -8806,6 +8816,7 @@ bool is_a_locked_or_unlocked_door(int tile_num)
               || (door_type == DOOR_TYPE_UNLOCKED_SILVER))
               return true;
     }
+    return false;
 }
 
 
@@ -8819,6 +8830,7 @@ bool OLD_is_a_locked_or_unlocked_door(int tile_num)
               || (current_level.door[tile_num-1].type == DOOR_TYPE_UNLOCKED))
               return true;
     }
+    return false;
 }
 
 void draw_locked_or_unlocked_door(int door_num, int x, int y)
@@ -11942,9 +11954,8 @@ void drawing_mode()
         else if (!key[ALLEGRO_KEY_PAD_MINUS]) release_minus = true;
 
         if (pen_from_tile_index > current_map.num_of_tiles()-1) pen_from_tile_index = 0;
-        if (pen_from_tile_index < 0) pen_from_tile_index = current_map.num_of_tiles()-1;
 
-        if (!(current_map.tile_index.size() < 0)) drawing_pen_int1 = current_map.tile_index[pen_from_tile_index].index_num;
+        drawing_pen_int1 = current_map.tile_index[pen_from_tile_index].index_num;
     }
     else if (drawing_destination == DRAWING_TO_BOUNDRY)
     {
@@ -11961,7 +11972,6 @@ void drawing_mode()
         else if (!key[ALLEGRO_KEY_PAD_MINUS]) release_minus = true;
 
         if (pen_of_boundry > 19) pen_of_boundry = 0;
-        if (pen_of_boundry < 0) pen_of_boundry = 19;
 
         drawing_pen_int1 = pen_of_boundry;
 
@@ -12249,7 +12259,7 @@ void figure_out_pause_screen_user_input(void)
                  if (pre_game_counter > 0)
                  {
                      pre_pause_gamestate = game_state;
-                     game_state == STATE_WAITING_FOR_LEVEL_START;
+                     game_state = STATE_WAITING_FOR_LEVEL_START;
                  }
                  else
                  {
@@ -12583,6 +12593,7 @@ float point_on_ramp_y(int ramp_index_num, float xx)
            //return point_on_a_line_y(current_map.ramp[s].top_x, current_map.ramp[s].top_y, current_map.ramp[s].bottom_x, current_map.ramp[s].bottom_y, xx);
         }
     }
+    return -1.0f;
 }
 
 //////////////////////////////////////////////////////////
@@ -13532,7 +13543,7 @@ void do_logic(void)
                  if (pre_game_counter > 0)
                  {
                      pre_pause_gamestate = game_state;
-                     game_state == STATE_WAITING_FOR_LEVEL_START;
+                     game_state = STATE_WAITING_FOR_LEVEL_START;
                  }
                  else
                  {
@@ -14003,7 +14014,7 @@ void game_loop()
        check_user_input();
 
        update_buffer();
-		al_flip_display();
+
    }
 
 	al_destroy_timer(timer);
